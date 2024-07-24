@@ -1,0 +1,24 @@
+﻿@page
+@model AppleStore.Pages.Admin.AnalyticManage.IndexModel
+
+<h2>Sold Products</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity Sold</th>
+            <th>Total Amount Sold</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Analytics)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.QuantitySold</td>
+                <td>@item.TotalAmountSold</td>
+            </tr>
+        }
+    </tbody>
+</table>

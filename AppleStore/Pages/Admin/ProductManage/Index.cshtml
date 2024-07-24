@@ -1,0 +1,60 @@
+﻿@page
+@model IndexModel
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+<h1>Index</h1>
+<p>
+    <a asp-page="./Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductList.First().ProductId)
+            </th>           
+            <th>
+                @Html.DisplayNameFor(model => model.ProductList.First().ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductList.First().QuantityPerUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductList.First().UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductList.First().ProductImage)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ProductList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductImage)
+                </td>
+
+                <td>
+                    <a  asp-page="./Edit" asp-route-id="@item.ProductId" >Edit</a> |
+                    <a  asp-page="./Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a  asp-page="./Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

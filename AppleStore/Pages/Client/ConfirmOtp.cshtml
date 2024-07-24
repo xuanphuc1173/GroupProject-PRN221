@@ -1,0 +1,23 @@
+﻿@page
+@model ConfirmOtpModel
+@{
+    ViewData["Title"] = "Xác nhận OTP";
+}
+<div class="container">
+    <div class="confirm-otp-form">
+        <h2 class="text-center mb-4">Xác nhận OTP</h2>
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+        <form method="post">
+            <div class="form-group mb-3">
+                <label for="otp">OTP</label>
+                <input type="text" name="Otp" class="form-control" placeholder="Nhập OTP" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Xác nhận</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@page 
+@model AppleStore.Pages.Carts.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete Cart Item</h1>
+
+<p>Are you sure you want to delete this item from your cart?</p>
+
+<form method="post">
+    <input type="hidden" name="CartItemId " value="@Model.CartItemId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-page="/Carts/Index" class="btn btn-secondary">Cancel</a>
+</form>

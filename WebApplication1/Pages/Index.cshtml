@@ -1,0 +1,66 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home page";
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @Model.SuccessMessage
+    </div>
+}
+
+<div class="container">
+    <div class="row pt-4 pb-4">
+        <div class="col-md-2">
+            <h2 class="text-uppercase">Apple Store</h2>
+            <i class="bi bi-plus-square-dotted"></i>
+
+        </div>
+        <div class="col-md-6 text-end">
+            <form method="get" class="d-inline-block">
+                <div class="input-group">
+                    <h5 style="margin-right:10px">Search</h5>
+                    <input type="text" name="search" class="form-control" aria-label="Search pizzas" aria-describedby="search-button">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit" id="search-button">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model.ProductList)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100" style="width: 18rem;">
+                    <img src="~/img/@item.ProductImage" class="card-img-top" alt="Card image">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title text-primary">@item.ProductName</h5>
+                            <p class="card-text fw-bold">$@item.UnitPrice</p>
+                        </div>
+
+                        <p>QuantityPerUnit:@item.QuantityPerUnit</p>
+
+
+                        <a asp-page="/pizzas/index" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card-img-top {
+        height: 300px; 
+        object-fit: cover; 
+        margin-top: 10px;
+    }
+</style>

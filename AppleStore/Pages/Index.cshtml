@@ -1,0 +1,129 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home page";
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @Model.SuccessMessage
+    </div>
+}
+
+<div class="container">
+    <div class="row pt-4 pb-4">
+        <div class="col-md-3">
+            <h2 class="text-uppercase">Apple Store</h2>
+            <i class="bi bi-plus-square-dotted"></i>
+
+        </div>
+        <div class="col-md-6 text-end">
+            <form method="get" class="d-inline-block">
+                <div class="input-group">
+                    <h5 style="margin-right:10px">Search</h5>
+                    <input asp-for="SearchQuery" class="form-control" aria-label="Search products" aria-describedby="search-button" placeholder="Product Name">
+                    <input asp-for="UnitPrice" class="form-control" aria-label="Unit Price" aria-describedby="search-button" placeholder="Max Unit Price" type="number" step="0.01">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit" id="search-button">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row" id="product-list">
+        @foreach (var item in Model.ProductList)
+        {
+            <div class="col-md-4 mb-4 product-item" data-product-id="@item.ProductId">
+                <div class="card h-100" style="width: 18rem;">
+                    <img src="@Url.Content(item.ProductImage)" class="card-img-top" alt="Card image">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title text-primary">@item.ProductName</h5>
+                            <p class="card-text fw-bold">$@item.UnitPrice</p>
+                        </div>
+
+                        <p>QuantityPerUnit:@item.QuantityPerUnit</p>
+
+                        <form method="post" asp-page-handler="AddToCart">
+                            <input type="hidden" name="ProductId" value="@item.ProductId" />
+                            <button class="btn btn-primary">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card-img-top {
+        height: 300px;
+        object-fit: cover;
+        margin-top: 10px;
+    }
+</style>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.7/signalr.min.js"></script>
+    <script type="text/javascript">
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/productHub")
+            .build();
+
+        connection.on("ReceiveProductUpdate", function (product) {
+            const productElement = document.querySelector(`.product-item[data-product-id='${product.ProductId}']`);
+            if (productElement) {
+                productElement.innerHTML = `
+                                    <div class="card h-100" style="width: 18rem;">
+                                                                <img src="${product.productImage}" class="card-img-top" alt="Card image">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                                                <h5 class="card-title text-primary">${product.productName}</h5>
+                                                                                <p class="card-text fw-bold">$${product.unitPrice}</p>
+                                            </div>
+                                                                            <p>QuantityPerUnit: ${product.quantityPerUnit}</p>
+                                            <a href="/index" class="btn btn-primary">Add to Cart</a>
+                                        </div>
+                                    </div>`;
+                alert(`Product ${product.productName} updated successfully!`);
+            } else {
+                const productHtml = `
+                                                            <div class="col-md-4 mb-4 product-item" data-product-id="${product.ProductId}">
+                                        <div class="card h-100" style="width: 18rem;">
+                                                                            <img src="${product.productImage}" class="card-img-top" alt="Card image">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                                                    <h5 class="card-title text-primary">${product.productName}</h5>
+                                                                                    <p class="card-text fw-bold">$${product.unitPrice}</p>
+                                                </div>
+                                                                                <p>QuantityPerUnit: ${product.quantityPerUnit}</p>
+                                                <a href="/index" class="btn btn-primary">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                document.getElementById('product-list').innerHTML += productHtml;
+                alert(`Product ${product.productName} added successfully!`);
+            }
+        });
+
+        connection.on("ReceiveProductDeletion", function (ProductId) {
+            const productElement = document.querySelector(`.product-item[data-product-id='${ProductId}']`);
+            if (productElement) {
+                productElement.remove();
+                alert(`Product with ID ${ProductId} deleted successfully!`);
+            } else {
+                alert(`Product with ID ${ProductId} not found.`);
+            }
+        });
+
+        connection.start().catch(function (err) {
+            console.error(err.toString());
+        });
+
+    </script>
+}

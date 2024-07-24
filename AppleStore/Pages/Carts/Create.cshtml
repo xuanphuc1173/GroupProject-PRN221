@@ -1,0 +1,43 @@
+﻿@page
+@model AppleStore.Pages.Carts.CreateModel
+
+@{
+    ViewData["Title"] = "Create Cart Item";
+}
+
+<h1>Create Cart Item</h1>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="CartItem.ProductId" class="control-label"></label>
+        <select asp-for="CartItem.ProductId" class="form-control" asp-items="Model.Products"></select>
+        <span asp-validation-for="CartItem.ProductId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CartItem.Quantity" class="control-label"></label>
+        <input asp-for="CartItem.Quantity" class="form-control" />
+        <span asp-validation-for="CartItem.Quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CartItem.Product.UnitPrice" class="control-label"></label>
+        <input asp-for="CartItem.Product.UnitPrice" class="form-control" />
+        <span asp-validation-for="CartItem.Product.UnitPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

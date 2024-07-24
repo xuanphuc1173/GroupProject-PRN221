@@ -1,0 +1,60 @@
+﻿@page
+@model AppleStore.Pages.Carts.IndexModel
+
+@{
+    ViewData["Title"] = "Your Cart";
+    var userType = Model.HttpContext.Session.GetInt32("UserType");
+}
+
+<h1>Your Cart</h1>
+@if (userType == 1) // Check if the user is an admin
+{
+    <p>
+        <a asp-page="./Create">Create New</a>
+    </p>
+}
+@if (Model.Cart != null && Model.Cart.Items.Any())
+{
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Cart Id</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Cart.Items)
+            {
+                <tr>
+                    <td>@item.CartItemId</td>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.UnitPrice</td>
+                    <td>@(item.Quantity * item.Product.UnitPrice)</td>
+                    <td>
+                        <a asp-page="/Carts/Edit" asp-route-cartItemId="@item.CartItemId">Edit</a> |
+                        <a asp-page="/Carts/Delete" asp-route-cartItemId="@item.CartItemId">Delete</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <strong>Total: $@Model.Cart.Items.Sum(i => i.Quantity * i.Product.UnitPrice)</strong>
+    </div>
+    <form method="post" asp-page-handler="BuyAll" class="text-end mt-3">
+        <button type="submit" class="btn btn-primary">Buy</button>
+    </form>
+
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
